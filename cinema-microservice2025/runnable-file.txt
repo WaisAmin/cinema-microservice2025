@@ -1,0 +1,12 @@
+$services = @('config', 'gateway', 'user-service', 'movie-service', 'booking-service', 'payment-service', 'notification-service')
+
+foreach($service in $services) {
+    Write-Host "`n=== Building $service ===`n" -ForegroundColor Cyan
+    cd $service
+    mvn clean package -DskipTests
+    cd ..
+    if($LASTEXITCODE -ne 0) {
+        Write-Host "Failed to build $service" -ForegroundColor Red
+        break
+    }
+}

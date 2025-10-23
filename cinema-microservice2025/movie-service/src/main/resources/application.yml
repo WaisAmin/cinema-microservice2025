@@ -1,0 +1,24 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cinema
+    username: cinema
+    password: cinema
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+movie:
+  exchange: movie-exchange
+  routing-key: movie.created
+  queue: movie-queue

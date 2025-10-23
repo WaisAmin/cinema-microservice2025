@@ -1,0 +1,22 @@
+
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build services
+        run: |
+          mvn -q -f gateway/pom.xml -DskipTests package
+          mvn -q -f user-service/pom.xml -DskipTests package
+          mvn -q -f movie-service/pom.xml -DskipTests package
+          mvn -q -f booking-service/pom.xml -DskipTests package
+          mvn -q -f payment-service/pom.xml -DskipTests package
+          mvn -q -f notification-service/pom.xml -DskipTests package
+          mvn -q -f config/pom.xml -DskipTests package

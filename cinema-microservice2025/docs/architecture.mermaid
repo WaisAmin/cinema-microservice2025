@@ -1,0 +1,9 @@
+flowchart LR
+  A[Client/Frontend] -->|REST via Gateway| G[API Gateway]
+  G --> U[User Service]
+  G --> M[Movie Service]
+  G --> B[Booking Service]
+  B -- booking.created --> Q[(RabbitMQ)]
+  Q --> P[Payment Service]
+  P -- payment.completed --> Q
+  Q --> N[Notification Service]

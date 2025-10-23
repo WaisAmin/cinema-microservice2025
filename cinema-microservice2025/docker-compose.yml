@@ -1,0 +1,94 @@
+version: "3.9"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks: [cinema_net]
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: cinema
+      POSTGRES_PASSWORD: cinema
+      POSTGRES_DB: cinema
+    ports:
+      - "5432:5432"
+    networks: [cinema_net]
+
+  config:
+    build: ./config
+    ports:
+      - "8888:8888"
+    networks: [cinema_net]
+
+  gateway:
+    build: ./gateway
+    depends_on: [config, user-service, movie-service, booking-service]
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8080:8080"
+    networks: [cinema_net]
+
+  user-service:
+    build: ./user-service
+    depends_on: [postgres, rabbitmq, config]
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8081:8081"
+    networks: [cinema_net]
+
+  movie-service:
+    build: ./movie-service
+    depends_on: [postgres, config]
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    networks: [cinema_net]
+
+  booking-service:
+    build: ./booking-service
+    depends_on: [postgres, rabbitmq, config]
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    networks: [cinema_net]
+
+  payment-service:
+    build: ./payment-service
+    depends_on: [rabbitmq, config]
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8084:8084"
+    networks: [cinema_net]
+
+  notification-service:
+    build: ./notification-service
+    depends_on: [rabbitmq, config]
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks: [cinema_net]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    environment:
+      - VITE_API_URL=http://gateway:8080
+    ports:
+      - "5173:80"
+    depends_on:
+      - gateway
+    networks:
+      - cinema_net
+
+networks:
+  cinema_net:
+    driver: bridge
