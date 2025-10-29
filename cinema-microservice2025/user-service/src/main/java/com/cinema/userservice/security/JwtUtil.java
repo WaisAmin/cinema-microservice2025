@@ -8,7 +8,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // ✅ Use the SAME SECRET as your API Gateway
+    //  Use the SAME SECRET as your API Gateway
     private static final String SECRET = "MySuperSecretKeyForJwtSigningMySuperSecretKey";
     private final long EXPIRATION = 1000 * 60 * 60; // 1 hour
 

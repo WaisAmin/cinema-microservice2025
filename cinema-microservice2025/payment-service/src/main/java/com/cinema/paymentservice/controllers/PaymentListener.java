@@ -18,10 +18,10 @@ public class PaymentListener {
     this.rabbit = rabbit;
   }
 
-  // ✅ Match queue name from RabbitConfig
+  //  Match queue name from RabbitConfig
   @RabbitListener(queues = "booking.created.queue")
   public void onBookingCreated(Map<String, Object> evt) {
-    System.out.println("📩 Received booking event: " + evt);
+    System.out.println(" Received booking event: " + evt);
 
 
     String bookingId = (String) evt.get("bookingId");
@@ -31,21 +31,21 @@ public class PaymentListener {
     boolean ok = movieId!=1;
 
     if (ok) {
-      // ✅ Send payment success message to RabbitMQ
+      //  Send payment success message to RabbitMQ
       Map<String, Object> out = new HashMap<>();
       out.put("type", "payment.completed");
       out.put("bookingId", bookingId);
       out.put("status", "OK");
       rabbit.convertAndSend("cinema.exchange", "payment.completed.queue", out);
-      System.out.println("✅ Payment succeeded for booking: " + bookingId);
+      System.out.println(" Payment succeeded for booking: " + bookingId);
     } else {
-      // ❌ Simulate payment failure — call booking cancellation API directly
+      //  Simulate payment failure — call booking cancellation API directly
       try {
         String cancelUrl = "http://booking-service:8083/bookings/" + bookingId;
         restTemplate.delete(cancelUrl);
-        System.out.println("❌ Payment failed — booking cancelled: " + bookingId);
+        System.out.println(" Payment failed — booking cancelled: " + bookingId);
       } catch (Exception e) {
-        System.err.println("⚠️ Failed to call booking cancellation API: " + e.getMessage());
+        System.err.println(" Failed to call booking cancellation API: " + e.getMessage());
       }
     }
   }
