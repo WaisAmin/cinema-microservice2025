@@ -9,12 +9,14 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+//This class defines the exchange, queue, binding used for messages
 @Configuration
 public class RabbitConfig {
   @Bean
   public TopicExchange exchange() {
     return new TopicExchange("cinema.exchange");
   }
+  //Declares durable queue named "booking.created"
   @Bean
   public Queue bookingCreatedQueue() {
     return new Queue("booking.created", true); // durable queue
@@ -25,6 +27,7 @@ public class RabbitConfig {
   public Jackson2JsonMessageConverter jsonMessageConverter() {
     return new Jackson2JsonMessageConverter();
   }
+//Binds the "booking.created" queue to the "cinema.exchange" exchange
 
   @Bean
   public RabbitTemplate rabbitTemplate(org.springframework.amqp.rabbit.connection.ConnectionFactory connectionFactory) {

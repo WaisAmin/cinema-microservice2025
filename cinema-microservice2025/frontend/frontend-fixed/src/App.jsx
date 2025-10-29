@@ -10,6 +10,8 @@ import { api } from './api.js';
 
 export default function App() {
   const navigate = useNavigate();
+
+  //Authentication and user state
   const [token, setToken] = useState(() => localStorage.getItem('cinema_token'));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -31,11 +33,13 @@ export default function App() {
     }
   }, [token]);
 
+  //Show a short toast message
   const showToast = (message) => {
     setToast(message);
     setTimeout(() => setToast(''), 4000);
   };
 
+  //Handle user login
   const handleLogin = async ({ email, password }) => {
     setLoading(true);
     try {
@@ -69,6 +73,7 @@ export default function App() {
     }
   };
 
+  //Handle user registration
   const handleRegister = async ({ email, password }) => {
     setLoading(true);
     try {
@@ -114,6 +119,7 @@ export default function App() {
     }
   };
 
+  //Handle user logout
   const handleLogout = () => {
     localStorage.removeItem('cinema_token');
     setToken(null);

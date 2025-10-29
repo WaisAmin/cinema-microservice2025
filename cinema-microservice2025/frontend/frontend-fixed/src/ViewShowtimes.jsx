@@ -1,8 +1,10 @@
 import React from 'react';
 
+//Component to display all showtimes for a specific movie
 export default function ViewShowtimes({ movie, showtimes, onClose, onBook, token }) {
   if (!movie) return null;
 
+  //Format date and time nicely for display
   const formatDateTime = (dateTimeStr) => {
     try {
       const date = new Date(dateTimeStr);

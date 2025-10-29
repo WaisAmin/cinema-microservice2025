@@ -129,7 +129,8 @@ export const api = {
     book({ token, movieId, showtimeId, seats }) {
         console.log('=== API.book called ===');
         console.log('Booking parameters:', { movieId, showtimeId, seats });
-        
+
+        //Prepare booking data to send to backend
         const bookingData = {
             movieId: parseInt(movieId),
             showtimeId: parseInt(showtimeId),
@@ -137,7 +138,8 @@ export const api = {
         };
         
         console.log('Booking data to send:', bookingData);
-        
+
+        //Send POST request to /bookings endpoint
         return http("/bookings", {
             method: "POST",
             token,
@@ -151,6 +153,7 @@ export const api = {
         });
     },
 
+    //Create a new movie
     createMovie({ token, title, genre, durationMinutes, description }) {
         return http("/movies", {
             method: "POST",
@@ -160,10 +163,12 @@ export const api = {
     },
 
 
+    //Update an existing movie
     updateMovie({ token, movieId, title, genre, durationMinutes, description }) {
         console.log('=== API.updateMovie called ===');
         console.log('Parameters:', { movieId, title, genre, durationMinutes, description });
-        
+
+        //Prepare movie data to send
         const movieData = {
             id: movieId,
             title,
@@ -173,7 +178,8 @@ export const api = {
         };
         
         console.log('Update movie data:', movieData);
-        
+
+        //Send PUT request to update movie
         return http(`/movies/${movieId}`, {
             method: "PUT",
             token,
@@ -187,6 +193,7 @@ export const api = {
         });
     },
 
+    //Delete a movie by ID
     deleteMovie({ token, movieId }) {
         return http(`/movies/${movieId}`, {
             method: "DELETE",
@@ -194,6 +201,7 @@ export const api = {
         });
     },
 
+    //Add a new showtime for a movie
     addShowtime({ token, movieId, showTime, availableSeats }) {
         console.log('=== API.addShowtime called ===');
         console.log('Parameters:', { token: token ? 'Present' : 'Missing', movieId, showTime, availableSeats });
@@ -201,7 +209,8 @@ export const api = {
         const body = { movieId, showTime, availableSeats };
         console.log('Request body:', body);
         console.log('Making POST request to /movies/showtimes');
-        
+
+        //Send POST request to create a new showtime
         return http("/movies/showtimes", {
             method: "POST",
             token,
@@ -215,6 +224,7 @@ export const api = {
         });
     },
 
+    //Delete a showtime by ID
     deleteShowtime({ token, showtimeId }) {
         return http(`/movies/showtimes/${showtimeId}`, {
             method: "DELETE",

@@ -33,20 +33,20 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
-        // 1️⃣ Skip OPTIONS requests (CORS preflight)
+        // Skip OPTIONS requests (CORS preflight)
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
             return chain.filter(exchange);
         }
 
         String path = exchange.getRequest().getURI().getPath().toLowerCase();
 
-        // 2️⃣ Skip public endpoints that never require authentication
+        // Skip public endpoints that never require authentication
         if (path.contains("/users/login") || path.contains("/users/register") || path.contains("/users/me") ||
                 (exchange.getRequest().getMethod() == HttpMethod.GET && path.startsWith("/movies"))) {
             return chain.filter(exchange);
         }
 
-        // 3️⃣ For all other endpoints, check Authorization header
+        //  For all other endpoints, check Authorization header
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             // No valid auth header - return 401 Unauthorized with CORS headers

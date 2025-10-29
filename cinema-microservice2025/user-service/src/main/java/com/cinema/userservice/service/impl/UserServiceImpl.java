@@ -10,16 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+//Handles core logic for user registration, authentication, and retrieval.
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    //Password encoder for hashing user passwords securely
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    //Registers a new user account, Checks if email already exists, Encrypts the password before saving and then saves the admin user
     @Override
     public User register(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
@@ -39,12 +42,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    //Authenticates a user by verifying email and passwords
     @Override
     public Optional<User> login(UserDTO userDTO) {
         return userRepository.findByEmail(userDTO.getEmail())
                 .filter(u -> passwordEncoder.matches(userDTO.getPassword(), u.getPassword()));
     }
 
+    //Retrieves a user by their email address
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);

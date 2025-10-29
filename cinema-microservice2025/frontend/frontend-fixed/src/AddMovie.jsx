@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from './api.js';
 
+//Component state for form inputs, loading indicator and toast messages
 export default function AddMovie({ token, user }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -13,11 +14,12 @@ export default function AddMovie({ token, user }) {
     description: ''
   });
 
+  //Show a temporary notification (disappears after 4 seconds)
   const showToast = (message) => {
     setToast(message);
     setTimeout(() => setToast(''), 4000);
   };
-
+//Update form input values as user type
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -26,10 +28,11 @@ export default function AddMovie({ token, user }) {
     }));
   };
 
-
+//Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    //Require login before allowing movie creation
     if (!token) {
       showToast('Please log in to add movies');
       return;
@@ -38,6 +41,7 @@ export default function AddMovie({ token, user }) {
 
     setLoading(true);
     try {
+      //Prepare movie data from form inputs
       const movieData = {
         title: formData.title,
         genre: formData.genre,
@@ -45,6 +49,7 @@ export default function AddMovie({ token, user }) {
         description: formData.description
       };
 
+      //Call backend API to create movie
       await api.createMovie({ token, ...movieData });
       
       // Invalidate movies cache so Home component will refetch

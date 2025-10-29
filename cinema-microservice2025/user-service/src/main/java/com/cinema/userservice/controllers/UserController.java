@@ -11,18 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+//REST controller for handling user related operations such as registration and login
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    //Constructor injection for dependencies
 
     public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
+    //Registers a new user account
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO req) {
         try {
@@ -37,10 +40,12 @@ public class UserController {
         }
     }
 
+    //Authenticates a user and returns a JWT token upon successful login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         return userService.login(userDTO)
                 .map(u -> {
+                    // Generate JWT for the authenticated user
                     String token = jwtUtil.generateToken(u.getEmail());
                     return ResponseEntity.ok(Map.of(
                             "token", token,
@@ -53,6 +58,7 @@ public class UserController {
                 .orElse(ResponseEntity.status(401).body(Map.of("error", "Invalid credentials")));
     }
 
+    //Retrieves the current authenticated users information
     @GetMapping("/me")
     public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String auth) {
         if (auth == null || !auth.startsWith("Bearer ")) {

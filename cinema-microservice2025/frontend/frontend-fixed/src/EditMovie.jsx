@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from './api.js';
 
 export default function EditMovie() {
+  //Get movieId from URL
   const { movieId } = useParams();
   const navigate = useNavigate();
+  //State for movie loading, saving, toast and form inputs
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState('');
@@ -15,10 +17,12 @@ export default function EditMovie() {
     description: ''
   });
 
+  //State for user authentication
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [userLoading, setUserLoading] = useState(true);
-  
+
+  //Load user data and verify authentication
   useEffect(() => {
     async function loadUserData() {
       try {
@@ -56,6 +60,7 @@ export default function EditMovie() {
     loadUserData();
   }, [navigate]);
 
+  //Show temporary toast messages
   const showToast = (message) => {
     setToast(message);
     setTimeout(() => setToast(''), 4000);
@@ -92,7 +97,8 @@ export default function EditMovie() {
       try {
         setLoading(true);
         const currentMovie = await api.getMovieById({ movieId: parseInt(movieId) });
-        
+
+        //Redirect if movie not found
         if (!currentMovie) {
           showToast('Movie not found');
           navigate('/');
@@ -119,6 +125,7 @@ export default function EditMovie() {
     }
   }, [movieId, token, user, userLoading, navigate]);
 
+  //Handle input field changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -127,6 +134,7 @@ export default function EditMovie() {
     }));
   };
 
+  //Handle form submission (save changes)
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -140,6 +148,7 @@ export default function EditMovie() {
     
     setSaving(true);
     try {
+      //Send update request to backend
       await api.updateMovie({ 
         token, 
         movieId: parseInt(movieId), 

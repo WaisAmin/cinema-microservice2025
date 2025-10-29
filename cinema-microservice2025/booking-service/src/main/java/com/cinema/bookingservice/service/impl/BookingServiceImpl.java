@@ -27,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
         this.restTemplate = restTemplate;
     }
 
+    //Creates a new booking and processes payment
     @Override
     public Booking createBooking(BookingDTO dto) {
         String bookingId = UUID.randomUUID().toString();
@@ -75,16 +76,20 @@ public class BookingServiceImpl implements BookingService {
         return booking;
     }
 
+    //Returns all bookings from database
+
     @Override
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
 
+    //Finds a booking by its ID
     @Override
     public Booking getBooking(String bookingId) {
         return bookingRepository.findByBookingId(bookingId).orElse(null);
     }
 
+    //Cancels a booking by setting its status to CANCELLED
     @Override
     public void cancelBooking(String bookingId) {
         bookingRepository.findByBookingId(bookingId).ifPresent(b -> {

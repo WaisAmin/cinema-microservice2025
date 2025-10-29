@@ -16,10 +16,16 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository repository;
 
+    //Method checks if an admin user exists - if not, creates one.
+
     @Override
     public void run(String... args) throws Exception {
         String adminEmail = "admin@gmail.com";
+
+        //Check if admin already exists in the database
         Optional<User> optional = repository.findByEmail(adminEmail);
+
+        //If no admin exists, create one with default credentials
         if (optional.isEmpty()) {
             String password = new BCryptPasswordEncoder(12).encode("admin123");
             User admin = new User(null, adminEmail, password, "admin", RoleType.ADMIN);

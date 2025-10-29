@@ -24,6 +24,7 @@ public class MovieServiceImpl implements MovieService {
         this.showtimeRepository = showtimeRepository;
     }
 
+    //Retrieve all movies with their showtimes
     @Override
     public List<MovieDTO> getAllMovies() {
         return movieRepository.findAll()
@@ -32,6 +33,7 @@ public class MovieServiceImpl implements MovieService {
                 .collect(Collectors.toList());
     }
 
+    //Retrieve all showtimes for a specific movie by its ID
     @Override
     public List<ShowtimeDTO> getShowtimesByMovie(Long movieId) {
         return showtimeRepository.findByMovieId(movieId)
@@ -105,13 +107,15 @@ public class MovieServiceImpl implements MovieService {
         return showtime;
     }
 
+    //Create and save a new movie in the database
     @Override
     public MovieDTO saveMovie(MovieDTO movieDTO) {
         Movie movie = toMovieEntity(movieDTO);
         Movie saved = movieRepository.save(movie);
         return toMovieDTO(saved);
     }
-    
+
+    //Update an existing movie by its ID
     @Override
     public MovieDTO updateMovie(Long movieId, MovieDTO movieDTO) {
         System.out.println("=== MovieService.updateMovie ===");
@@ -134,12 +138,16 @@ public class MovieServiceImpl implements MovieService {
         
         return toMovieDTO(updated);
     }
+
+    //Get the number available seats for a showtime
 @Override
     public int getAvailableSeats(Long showtimeId) {
         return showtimeRepository.findById(showtimeId)
                 .map(Showtime::getAvailableSeats)
                 .orElseThrow(() -> new RuntimeException("Showtime not found"));
     }
+
+    //Add a new showtime for an existing movie
     
     @Override
     public ShowtimeDTO addShowtime(ShowtimeDTO showtimeDTO) {
@@ -189,7 +197,8 @@ public class MovieServiceImpl implements MovieService {
         
         return result;
     }
-    
+
+    //Delete a showtime by ID
     @Override
     public void deleteShowtime(Long showtimeId) {
         if (!showtimeRepository.existsById(showtimeId)) {
@@ -197,7 +206,8 @@ public class MovieServiceImpl implements MovieService {
         }
         showtimeRepository.deleteById(showtimeId);
     }
-    
+
+    //Delete a movie by its ID
     @Override
     public void deleteMovie(Long movieId) {
         if (!movieRepository.existsById(movieId)) {

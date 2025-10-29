@@ -3,13 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from './api.js';
 
 export default function ManageShowtimes({ token, user }) {
-  const { movieId } = useParams();
-  const navigate = useNavigate();
-  const [movie, setMovie] = useState(null);
-  const [showtimes, setShowtimes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState('');
-  const [showAddForm, setShowAddForm] = useState(false);
+  const { movieId } = useParams(); //Get movieId from URL
+  const navigate = useNavigate();//Used for navigation
+  const [movie, setMovie] = useState(null);//Current movie details
+  const [showtimes, setShowtimes] = useState([]);//List of showtimes for this movie
+  const [loading, setLoading] = useState(true);//Loading spinner state
+  const [toast, setToast] = useState('');//Toast notification
+  const [showAddForm, setShowAddForm] = useState(false);//Toggle add-showtime form
   const [newShowtime, setNewShowtime] = useState({
     showDate: '',
     showTime: '',
@@ -58,6 +58,7 @@ export default function ManageShowtimes({ token, user }) {
         }
         setMovie(currentMovie);
 
+        //Fetch all showtimes for this movie
         const showtimeData = await api.showtimes(movieId);
         setShowtimes(showtimeData);
       } catch (error) {
@@ -73,6 +74,7 @@ export default function ManageShowtimes({ token, user }) {
     }
   }, [movieId, token, user, navigate]);
 
+  //Handle input change in Add Showtime form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewShowtime(prev => ({
@@ -81,6 +83,7 @@ export default function ManageShowtimes({ token, user }) {
     }));
   };
 
+  //Add new showtime
   const handleAddShowtime = async (e) => {
     e.preventDefault();
     if (!newShowtime.showDate || !newShowtime.showTime) {
@@ -97,6 +100,7 @@ export default function ManageShowtimes({ token, user }) {
         availableSeats: parseInt(newShowtime.availableSeats)
       };
 
+      //Call backend API
       const result = await api.addShowtime({ token, ...showtimeData });
       const updatedShowtimes = await api.showtimes(movieId);
       setShowtimes(updatedShowtimes);
@@ -117,11 +121,13 @@ export default function ManageShowtimes({ token, user }) {
     }
   };
 
+  //Handle delete showtime click
   const handleDeleteClick = (showtime) => {
     setShowtimeToDelete(showtime);
     setShowDeleteModal(true);
   };
-  
+
+  //Confirm delete showtime
   const confirmDeleteShowtime = async () => {
     if (!showtimeToDelete) return;
     
@@ -129,7 +135,8 @@ export default function ManageShowtimes({ token, user }) {
     
     try {
       await api.deleteShowtime({ token, showtimeId: showtimeToDelete.id });
-      
+
+      //Remove deleted showtime from state
       setShowtimes(prevShowtimes =>
         prevShowtimes.filter(showtime => showtime.id !== showtimeToDelete.id)
       );
@@ -141,12 +148,14 @@ export default function ManageShowtimes({ token, user }) {
       setShowtimeToDelete(null);
     }
   };
-  
+
+  //Cancel delete
   const cancelDeleteShowtime = () => {
     setShowDeleteModal(false);
     setShowtimeToDelete(null);
   };
 
+  //Format date and time for display
   const formatDateTime = (dateTimeStr) => {
     const date = new Date(dateTimeStr);
     return {

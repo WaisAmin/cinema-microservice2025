@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
+//Component for login and registration forms
 export default function AuthForm({ mode='login', onSubmit, loading=false, onClear }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +20,8 @@ export default function AuthForm({ mode='login', onSubmit, loading=false, onClea
       onClear(clearForm);
     }
   }, [onClear]);
-  
+
+  //Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!loading) {
