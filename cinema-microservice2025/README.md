@@ -2,7 +2,7 @@
 
 This repository contains a complete implemented microservice-cinema booking system described in our arbeidskrav.
 It includes 6 Spring Boot services, Spring Cloud Gateway, RabbitMQ messaging, PostgreSQL databases, Spring Cloud Config,
-Dockerfiles for each service, and a `docker-compose.yml` that starts everything with a single command.
+Dockerfiles for each service, and a `docker-compose.yml` that starts everything with a single command. **Remember to use JAVA 17**.
 
 In addition to the arbeidskrav we decided to expand the scope of the project by adding more advanced
 and interactive interface and improve the service "logic". These improvements made the project 
